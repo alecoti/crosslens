@@ -117,6 +117,13 @@ poetry.lock
 .venv/
 dist/
 
+# Frontend build artifacts
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Generated audio
+backend/static/
 # Python
 *.pyc
 __pycache__/

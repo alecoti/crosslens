@@ -13,7 +13,14 @@ class TTSProvider(ABC):
     ]
     
     @abstractmethod
-    def generate_audio(self, text: str, voice: str, model: str, voice2: str) -> bytes:
+    def generate_audio(
+        self,
+        text: str,
+        voice: str,
+        model: str,
+        voice2: str = None,
+        **kwargs,
+    ) -> bytes:
         """
         Generate audio from text using the provider's API.
         
@@ -40,7 +47,14 @@ class TTSProvider(ABC):
         """
         return self.COMMON_SSML_TAGS.copy()
     
-    def validate_parameters(self, text: str, voice: str, model: str, voice2: str = None) -> None:
+    def validate_parameters(
+        self,
+        text: str,
+        voice: str,
+        model: str,
+        voice2: str = None,
+        **kwargs,
+    ) -> None:
         """
         Validate input parameters before generating audio.
         

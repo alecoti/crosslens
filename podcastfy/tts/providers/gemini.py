@@ -27,8 +27,14 @@ class GeminiTTS(TTSProvider):
             logger.error(f"Failed to initialize Google TTS client: {str(e)}")
             raise
 
-    def generate_audio(self, text: str, voice: str = "en-US-Journey-F", 
-                      model: str = None, **kwargs) -> bytes:
+    def generate_audio(
+        self,
+        text: str,
+        voice: str = "en-US-Journey-F",
+        model: str = None,
+        voice2: str = None,
+        **kwargs,
+    ) -> bytes:
         """
         Generate audio using Google Cloud TTS API.
         

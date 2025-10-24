@@ -33,7 +33,7 @@ class TextToSpeech:
 
         Args:
                         model (str): The model to use for text-to-speech conversion.
-                                                Options are 'elevenlabs', 'gemini', 'openai', 'edge' or 'geminimulti'. Defaults to 'openai'.
+                                                Options are 'elevenlabs', 'gemini', 'gemini_flash_tts', 'openai', 'edge' or 'geminimulti'. Defaults to 'openai'.
                         api_key (Optional[str]): API key for the selected text-to-speech service.
                         conversation_config (Optional[Dict]): Configuration for conversation settings.
         """
@@ -58,7 +58,11 @@ class TextToSpeech:
     def _get_provider_config(self) -> Dict[str, Any]:
         """Get provider-specific configuration."""
         # Get provider name in lowercase without 'TTS' suffix
-        provider_name = self.provider.__class__.__name__.lower().replace("tts", "")
+        provider_name = getattr(self.provider, "config_key", None)
+        if not provider_name:
+            provider_name = (
+                self.provider.__class__.__name__.lower().replace("tts", "")
+            )
 
         # Get provider config from tts_config
         provider_config = self.tts_config.get(provider_name, {})
@@ -101,12 +105,19 @@ class TextToSpeech:
                 voice = provider_config.get("default_voices", {}).get("question")
                 voice2 = provider_config.get("default_voices", {}).get("answer")
                 model = provider_config.get("model")
+                provider_kwargs = {
+                    key: value
+                    for key, value in provider_config.items()
+                    if key not in {"default_voices", "model"}
+                }
+
                 audio_data_list = self.provider.generate_audio(
                     cleaned_text,
                     voice="S",
                     model="en-US-Studio-MultiSpeaker",
                     voice2="R",
                     ending_message=self.ending_message,
+                    **provider_kwargs,
                 )
 
                 try:
@@ -160,6 +171,12 @@ class TextToSpeech:
         audio_files = []
         provider_config = self._get_provider_config()
 
+        provider_kwargs = {
+            key: value
+            for key, value in provider_config.items()
+            if key not in {"default_voices", "model"}
+        }
+
         for idx, (question, answer) in enumerate(qa_pairs, 1):
             for speaker_type, content in [("question", question), ("answer", answer)]:
                 temp_file = os.path.join(
@@ -168,7 +185,9 @@ class TextToSpeech:
                 voice = provider_config.get("default_voices", {}).get(speaker_type)
                 model = provider_config.get("model")
 
-                audio_data = self.provider.generate_audio(content, voice, model)
+                audio_data = self.provider.generate_audio(
+                    content, voice, model, **provider_kwargs
+                )
                 with open(temp_file, "wb") as f:
                     f.write(audio_data)
                 audio_files.append(temp_file)
