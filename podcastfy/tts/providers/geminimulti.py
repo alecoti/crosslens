@@ -216,8 +216,15 @@ class GeminiMultiTTS(TTSProvider):
                 return audio_chunks[0]
             raise RuntimeError(f"Failed to merge audio chunks and no valid fallback found: {str(e)}")
 
-    def generate_audio(self, text: str, voice: str = "R", model: str = "en-US-Studio-MultiSpeaker", 
-                       voice2: str = "S", ending_message: str = ""):
+    def generate_audio(
+        self,
+        text: str,
+        voice: str = "R",
+        model: str = "en-US-Studio-MultiSpeaker",
+        voice2: str = "S",
+        ending_message: str = "",
+        **kwargs,
+    ):
         """
         Generate audio using Google Cloud TTS API with multi-speaker support.
         Handles text longer than 5000 bytes by chunking and merging.

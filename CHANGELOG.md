@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Boilerplate FastAPI backend and Next.js frontend for Podcastfy Gemini Flash testing
+- Firefox-based Playwright scraping pipeline with Gemini Flash TTS integration
+- Backend API models, configuration helpers and tests for the new `/api/generate` endpoint
 
 ## [0.4.0] - 2024-11-16
 
