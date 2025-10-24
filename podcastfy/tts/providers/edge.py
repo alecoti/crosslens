@@ -17,7 +17,14 @@ class EdgeTTS(TTSProvider):
         """
         self.model = model or "default"  # Edge TTS doesn't use models, but we set it for consistency
 
-    def generate_audio(self, text: str, voice: str, model: str, voice2: str = None) -> bytes:
+    def generate_audio(
+        self,
+        text: str,
+        voice: str,
+        model: str,
+        voice2: str = None,
+        **kwargs,
+    ) -> bytes:
         """Generate audio using Edge TTS."""
         import nest_asyncio
         import asyncio

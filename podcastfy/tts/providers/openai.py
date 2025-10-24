@@ -28,7 +28,14 @@ class OpenAITTS(TTSProvider):
         """Get all supported SSML tags including provider-specific ones."""
         return self.PROVIDER_SSML_TAGS
         
-    def generate_audio(self, text: str, voice: str, model: str, voice2: str = None) -> bytes:
+    def generate_audio(
+        self,
+        text: str,
+        voice: str,
+        model: str,
+        voice2: str = None,
+        **kwargs,
+    ) -> bytes:
         """Generate audio using OpenAI API."""
         self.validate_parameters(text, voice, model)
         

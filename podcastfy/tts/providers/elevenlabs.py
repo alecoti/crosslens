@@ -16,7 +16,14 @@ class ElevenLabsTTS(TTSProvider):
         self.client = elevenlabs_client.ElevenLabs(api_key=api_key)
         self.model = model
         
-    def generate_audio(self, text: str, voice: str, model: str, voice2: str = None) -> bytes:
+    def generate_audio(
+        self,
+        text: str,
+        voice: str,
+        model: str,
+        voice2: str = None,
+        **kwargs,
+    ) -> bytes:
         """Generate audio using ElevenLabs API."""
         audio = self.client.generate(
             text=text,
