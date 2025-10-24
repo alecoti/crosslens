@@ -3,14 +3,17 @@
 ## [Unreleased]
 
 ### Added
-- Boilerplate FastAPI backend and Next.js frontend for Podcastfy Gemini Flash testing
-- Firefox-based Playwright scraping pipeline with Gemini Flash TTS integration
-- Backend API models, configuration helpers and tests for the new `/api/generate` endpoint
+- Endpoint `POST /v1/context/build` per la normalizzazione della query e l'estrazione del contesto tramite OpenAI `o4-mini`
+- Endpoint `POST /v1/frames/analyze` per l'estrazione degli articoli con Playwright/Firefox e la generazione delle frame card
+- Service layer con schema JSON vincolato, gestione errori e normalizzazione delle liste ISO-3166/attori/organizzazioni
+- Estrattore Playwright con fallback e schema JSON per le frame card (`tone`, `stance`, `frame_label`, ecc.)
+- Test FastAPI e unit test dei servizi con fake client OpenAI per evitare chiamate reali
+- Documentazione aggiornata per descrivere gli Step 1 e 3 del flusso CrossLens e i requisiti Playwright
 
 ## [0.4.0] - 2024-11-16
 
 ### Added
-- Add Google Singlespeaker (Journey) and Multispeaker TTS models 
+- Add Google Singlespeaker (Journey) and Multispeaker TTS models
 - Fixed limitations of Google Multispeaker TTS model: 5000 bytes input limite and 500 bytes per turn limit.
 - Updated tests and docs accordingly
 
@@ -45,12 +48,11 @@
 
 ### Added
 - Add local llm option by @souzatharsis
-- Enable running podcastfy with no API KEYs thanks to solving #18 #58 #65 by @souzatharsis and @ChinoUkaegbu 
+- Enable running podcastfy with no API KEYs thanks to solving #18 #58 #65 by @souzatharsis and @ChinoUkaegbu
 - Add user-provided TSS config such as voices #10 #6 #27 by @souzatharsis
 - Add open in collab and setting python version to 3.11 by @Devparihar5 #57
 - Add edge tts support by @ChinoUkaegbu
 - Update pypdf with pymupdf(10x faster then pypdf) #56 check by @Devparihar5
-- Replace r.jina.ai with simple BeautifulSoap #18 by @souzatharsis
 
 ### Fixed
 - Fixed CLI for user-provided config #69 @souzatharsis
@@ -60,17 +62,16 @@
 ### Added
 - Added API reference docs and published it to https://podcastfy.readthedocs.io/en/latest/
 
-### Fixed 
+### Fixed
 - ([#52](https://github.com/user/podcastfy/issues/37)) Fixed simple bug introduced in 0.2.1 that broke the ability to generate podcasts from text inputs!
 - Fixed one example in the documentation that was not working.
 
 ## [0.2.1] - 2024-10-12
 
-
 ### Added
 - ([#8](https://github.com/user/podcastfy/issues/8)) Podcastfy is now multi-modal! Users can now generate audio from images by simply providing the paths to the image files.
 
-### Fixed 
+### Fixed
 - ([#40](https://github.com/user/podcastfy/issues/37)) Updated default ElevenLabs voice from `BrittneyHart` to `Jessica`. The latter was a non-default voice I used from my account, which caused error for users who don't have it.
 
 ## [0.2.0] - 2024-10-10

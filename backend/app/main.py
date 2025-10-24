@@ -1,15 +1,24 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
-from .models import GenerationRequest, GenerationResponse
-from .services import generate_audio
+from .models import (
+    ContextBuildRequest,
+    ContextBuildResponse,
+    FramesAnalyzeRequest,
+    FramesAnalyzeResponse,
+)
+from .services import (
+    ContextBuildServiceError,
+    FrameAnalysisServiceError,
+    analyze_frames,
+    build_context,
+)
 
 settings = get_settings()
 
-app = FastAPI(title="Podcastfy Gemini Flash Boilerplate")
+app = FastAPI(title="CrossLens Backend")
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,15 +28,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
 
-
-@app.post("/api/generate", response_model=GenerationResponse)
-async def post_generate(request: GenerationRequest) -> JSONResponse:
+@app.post("/v1/context/build", response_model=ContextBuildResponse)
+async def post_context_build(request: ContextBuildRequest) -> JSONResponse:
     try:
-        results = await generate_audio(request)
-        return JSONResponse(content=GenerationResponse(results=results).model_dump())
-    except Exception as exc:  # pragma: no cover - runtime failures
+        response = await build_context(request)
+        return JSONResponse(content=response.model_dump(mode="json"))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except ContextBuildServiceError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.post("/v1/frames/analyze", response_model=FramesAnalyzeResponse)
+async def post_frames_analyze(request: FramesAnalyzeRequest) -> JSONResponse:
+    try:
+        response = await analyze_frames(request)
+        return JSONResponse(content=response.model_dump(mode="json"))
+    except FrameAnalysisServiceError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
